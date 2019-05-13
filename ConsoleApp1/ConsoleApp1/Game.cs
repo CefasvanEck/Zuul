@@ -5,9 +5,9 @@ namespace ZuulCS
 	public class Game
 	{
 		private Parser parser;
-		private Room currentRoom;
+        private Player player = new Player();
 
-		public Game ()
+        public Game ()
 		{
 			createRooms();
 			parser = new Parser();
@@ -15,30 +15,31 @@ namespace ZuulCS
 
 		private void createRooms()
 		{
-			Room outside, theatre, pub, lab, office;
+			Room outside, caveEntrance, waterCave, stalactiteCave, lavaCave;
 
 			// create the rooms
-			outside = new Room("outside the main entrance of the university");
-			theatre = new Room("in a lecture theatre");
-			pub = new Room("in the campus pub");
-			lab = new Room("in a computing lab");
-			office = new Room("in the computing admin office");
+			outside = new Room("You are outside the main cave entrance.");
+            caveEntrance = new Room("You are inside the first part of the cave");
+            waterCave = new Room("You are inside the water cave, your feet are wet and you see water dripping from the ceiling");
+            stalactiteCave = new Room("You are inside the stalactite cave and you see giant stone pointy stalactites hanging from the ceiling");
+            lavaCave = new Room("You are inside the lava cave and it's very hot here");
 
 			// initialise room exits
-			outside.setExit("east", theatre);
-			outside.setExit("south", lab);
-			outside.setExit("west", pub);
+			outside.setExit("north", caveEntrance);
 
-			theatre.setExit("west", outside);
+            caveEntrance.setExit("south", outside);
+            caveEntrance.setExit("east", waterCave);
+            caveEntrance.setExit("west", stalactiteCave);
+            caveEntrance.setExit("north", lavaCave);
 
-			pub.setExit("east", outside);
+            waterCave.setExit("west", caveEntrance);
 
-			lab.setExit("north", outside);
-			lab.setExit("east", office);
+            stalactiteCave.setExit("east", caveEntrance);
+     
+            lavaCave.setExit("south", caveEntrance);
 
-			office.setExit("west", lab);
-
-			currentRoom = outside;  // start game outside
+            // start game outside
+            player.setCurrentRoom(outside);
 		}
 
 
@@ -65,11 +66,11 @@ namespace ZuulCS
 		private void printWelcome()
 		{
 			Console.WriteLine();
-			Console.WriteLine("Welcome to Zuul!");
-			Console.WriteLine("Zuul is a new, incredibly boring adventure game.");
+			Console.WriteLine("Welcome to Cavecraft!");
+			Console.WriteLine("Cavecraft is an underground dungeon adventure game.");
 			Console.WriteLine("Type 'help' if you need help.");
 			Console.WriteLine();
-			Console.WriteLine(currentRoom.getLongDescription());
+			Console.WriteLine(player.getCurrentRoom().getLongDescription());
 		}
 
 		/**
@@ -93,7 +94,10 @@ namespace ZuulCS
 					break;
 				case "go":
 					goRoom(command);
-					break;
+                    break;
+                case "look":
+                    goLook(command);
+                    break;
 				case "quit":
 					wantToQuit = true;
 					break;
@@ -101,18 +105,18 @@ namespace ZuulCS
 
 			return wantToQuit;
 		}
+        
+        // implementations of user commands:
 
-		// implementations of user commands:
-
-		/**
+        /**
 	     * Print out some help information.
 	     * Here we print some stupid, cryptic message and a list of the
 	     * command words.
 	     */
-		private void printHelp()
+        private void printHelp()
 		{
 			Console.WriteLine("You are lost. You are alone.");
-			Console.WriteLine("You wander around at the university.");
+			Console.WriteLine("You wander around the cave entrance.");
 			Console.WriteLine();
 			Console.WriteLine("Your command words are:");
 			parser.showCommands();
@@ -124,7 +128,8 @@ namespace ZuulCS
 	     */
 		private void goRoom(Command command)
 		{
-			if(!command.hasSecondWord()) {
+			if(!command.hasSecondWord())
+            {
 				// if there is no second word, we don't know where to go...
 				Console.WriteLine("Go where?");
 				return;
@@ -133,15 +138,28 @@ namespace ZuulCS
 			string direction = command.getSecondWord();
 
 			// Try to leave current room.
-			Room nextRoom = currentRoom.getExit(direction);
+			Room nextRoom = player.getCurrentRoom().getExit(direction);
 
-			if (nextRoom == null) {
+			if (nextRoom == null)
+            {
 				Console.WriteLine("There is no door to "+direction+"!");
-			} else {
-				currentRoom = nextRoom;
-				Console.WriteLine(currentRoom.getLongDescription());
+			}
+            else
+            {
+                player.setCurrentRoom(nextRoom);
+				Console.WriteLine(player.getCurrentRoom().getLongDescription());
 			}
 		}
 
-	}
+        /**
+	     * Try to go to one direction. If there is an exit, enter the new
+	     * room, otherwise print an error message.
+	     */
+        private void goLook(Command command)
+        {
+            // Try to leave current room.
+            Console.WriteLine(player.getCurrentRoom().getLongDescription());
+        }
+
+    }
 }

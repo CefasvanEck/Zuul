@@ -42,7 +42,7 @@ namespace ZuulCS
 	     */
 		public string getLongDescription()
 		{
-			string returnstring = "You are ";
+			string returnstring = " ";
 			returnstring += description;
 			returnstring += ".\n";
 			returnstring += getExitstring();
@@ -53,7 +53,7 @@ namespace ZuulCS
 	     * Return a string describing the room's exits, for example
 	     * "Exits: north, west".
 	     */
-		private string getExitstring()
+		public string getExitstring()
 		{
 			string returnstring = "Exits:";
 
