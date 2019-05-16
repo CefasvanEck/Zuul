@@ -96,7 +96,7 @@ namespace ZuulCS
 					goRoom(command);
                     break;
                 case "look":
-                    goLook(command);
+                    Console.WriteLine(player.getCurrentRoom().getLongDescription());
                     break;
 				case "quit":
 					wantToQuit = true;
@@ -150,16 +150,5 @@ namespace ZuulCS
 				Console.WriteLine(player.getCurrentRoom().getLongDescription());
 			}
 		}
-
-        /**
-	     * Try to go to one direction. If there is an exit, enter the new
-	     * room, otherwise print an error message.
-	     */
-        private void goLook(Command command)
-        {
-            // Try to leave current room.
-            Console.WriteLine(player.getCurrentRoom().getLongDescription());
-        }
-
     }
 }
