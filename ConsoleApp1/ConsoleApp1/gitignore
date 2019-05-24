@@ -1,8 +1,8 @@
-.vs
-bin
-obj
-Properties
-App.config
-ConsoleApp1.csproj
-Doxyfile
-Makefile
+*.vs
+b*in
+*obj
+*Properties
+*App.config
+*ConsoleApp1.csproj
+*Doxyfile
+*Makefile
