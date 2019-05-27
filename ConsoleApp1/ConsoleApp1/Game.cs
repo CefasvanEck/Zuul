@@ -142,13 +142,20 @@ namespace ZuulCS
 
 			if (nextRoom == null)
             {
-				Console.WriteLine("There is no door to "+direction+"!");
+				Console.WriteLine("There is no cave entrance to the "+direction+"!");
 			}
-            else
+            else if(player.getCurrentHealth() > 0)
             {
                 player.setCurrentRoom(nextRoom);
 				Console.WriteLine(player.getCurrentRoom().getLongDescription());
-			}
+                player.damage(1);
+                Console.WriteLine("The player took some damage....");
+                Console.WriteLine("The player has " + player.getCurrentHealth() + " health left.");
+            }
+            else
+            {
+                Console.WriteLine("The player can't go anywhere when he/she is dead.");
+            }
 		}
 
         /**

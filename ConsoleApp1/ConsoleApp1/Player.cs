@@ -1,5 +1,7 @@
 namespace ZuulCS
 {
+    using System;
+
     public class Player
     {
         private Room currentRoom;
@@ -52,13 +54,14 @@ namespace ZuulCS
          */
         public void damage(float amount)
         {
-            if (this.currentHealth - amount >= this.maxHealth)
+            if (this.currentHealth - amount >= 0)
             {
                 this.currentHealth -= amount;
             }
             else
             {
                 this.currentHealth = 0;
+                Console.WriteLine("The player died...");
             }
         }
 
