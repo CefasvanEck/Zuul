@@ -15,7 +15,7 @@ namespace ZuulCS
 
 		private void createRooms()
 		{
-			Room outside, caveEntrance, waterCave, stalactiteCave, lavaCave;
+			Room outside, caveEntrance, waterCave, stalactiteCave, lavaCave, crackedCave, darkCave;
 
 			// create the rooms
 			outside = new Room("You are outside the main cave entrance.");
@@ -23,21 +23,41 @@ namespace ZuulCS
             waterCave = new Room("You are inside the water cave, your feet are wet and you see water dripping from the ceiling");
             stalactiteCave = new Room("You are inside the stalactite cave and you see giant stone pointy stalactites hanging from the ceiling");
             lavaCave = new Room("You are inside the lava cave and it's very hot here");
+            //Up caves
+            crackedCave = new Room("You are just below the surface but can see the sun through the cracks in the ceiling");
+            //Down caves
+            darkCave = new Room("You are far below the surface and you can't see anything but the exit.");
 
-			// initialise room exits
-			outside.setExit("north", caveEntrance);
-
+            // initialise room exits
+            //Cave outside
+            outside.setExit("north", caveEntrance);
+            //Cave main entrance
             caveEntrance.setExit("south", outside);
             caveEntrance.setExit("east", waterCave);
             caveEntrance.setExit("west", stalactiteCave);
             caveEntrance.setExit("north", lavaCave);
+            caveEntrance.setExit("up", crackedCave);
 
+            caveEntrance.placeItemInRoom(new Item("Dynamite"));
+            //Water cave
             waterCave.setExit("west", caveEntrance);
-
+            //Stalactite cave
             stalactiteCave.setExit("east", caveEntrance);
-     
+            stalactiteCave.setExit("down", darkCave);
+
+            stalactiteCave.placeItemInRoom(new Item("Pickaxe"));
+            //Lava Cave
             lavaCave.setExit("south", caveEntrance);
 
+            lavaCave.placeItemInRoom(new Item("Lava Rock"));
+            //Up cracked cave
+            crackedCave.setExit("down", caveEntrance);
+
+            crackedCave.placeItemInRoom(new Item("Old Sword"));
+            //Down dark cave
+            darkCave.setExit("up", stalactiteCave);
+
+            darkCave.placeItemInRoom(new Item("Old Pistol"));
             // start game outside
             player.setCurrentRoom(outside);
 		}
@@ -96,7 +116,10 @@ namespace ZuulCS
 					goRoom(command);
                     break;
                 case "look":
-                    goLook(command);
+                    goLook();
+                    break;
+                case "pickup":
+                    pickup(command);
                     break;
 				case "quit":
 					wantToQuit = true;
@@ -162,10 +185,28 @@ namespace ZuulCS
 	     * Try to go to one direction. If there is an exit, enter the new
 	     * room, otherwise print an error message.
 	     */
-        private void goLook(Command command)
+        private void goLook()
         {
             // Try to leave current room.
             Console.WriteLine(player.getCurrentRoom().getLongDescription());
+            //Looks around the room for items and print it.
+            Console.WriteLine(player.getCurrentRoom().getItemInRoom());
+        }
+
+        /**
+         * Pickup an item and remove it from the room array list
+         */
+        private void pickup(Command command)
+        {
+            for (int i = 0; i < player.getCurrentRoom().getItemList().Count; ++i)
+            {
+                string itemInRoom = player.getCurrentRoom().getItemList()[i].getItemName();
+                if (command.getSecondWord().Equals(itemInRoom))
+                {
+                    Console.WriteLine("picked up " + itemInRoom);
+                    player.getCurrentRoom().removeItemFromRoom(player.getCurrentRoom().getItemList()[i]);
+                }
+            }
         }
 
     }

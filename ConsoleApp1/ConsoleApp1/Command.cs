@@ -25,11 +25,20 @@ namespace ZuulCS
 			return commandWord;
 		}
 
-		/**
+        /**
+        * Return the command word (the first word) of this command. If the
+        * command was not understood, the result is null.
+        */
+        public string getCommand()
+        {
+            return commandWord + secondWord;
+        }
+
+        /**
 	     * Return the second word of this command. Returns null if there was no
 	     * second word.
 	     */
-		public string getSecondWord()
+        public string getSecondWord()
 		{
 			return secondWord;
 		}

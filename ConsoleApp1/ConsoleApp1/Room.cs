@@ -6,22 +6,61 @@ namespace ZuulCS
 	{
 		private string description;
 		private Dictionary<string, Room> exits; // stores exits of this room.
+        private List<Item> items = new List<Item>(); //stores the items in this room.
 
-		/**
+        /**
 	     * Create a room described "description". Initially, it has no exits.
 	     * "description" is something like "in a kitchen" or "in an open court
 	     * yard".
 	     */
-		public Room(string description)
+        public Room(string description)
 		{
 			this.description = description;
 			exits = new Dictionary<string, Room>();
 		}
 
-		/**
+        public List<Item> getItemList()
+        {
+            return items;
+        }
+
+        /**
+         * Push items in the array
+         */
+        public void placeItemInRoom(Item item)
+        {
+            items.Add(item);
+        }
+
+        public void removeItemFromRoom(Item itemInList)
+        {
+            items.Remove(itemInList);
+        }
+
+        /**
+         * Get all the items by there name and print it to a string
+         */
+        public string getItemInRoom()
+        {
+            string itemNamesInRoom = "";
+            for(int i = 0;i < items.Count;++i)
+            {
+                if(i < items.Count - 1)
+                {
+                    itemNamesInRoom += items[i].getItemName() + ", ";
+                }
+                else
+                {
+                    itemNamesInRoom += items[i].getItemName();
+                }
+            }
+            return itemNamesInRoom;
+        }
+
+        /**
 	     * Define an exit from this room.
 	     */
-		public void setExit(string direction, Room neighbor)
+        public void setExit(string direction, Room neighbor)
 		{
 			exits[direction] = neighbor;
 		}

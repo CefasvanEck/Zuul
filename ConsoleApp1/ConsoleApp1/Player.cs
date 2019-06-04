@@ -10,8 +10,7 @@ namespace ZuulCS
          * This way you can add as an example small enemy's that do little damage but when the enemy is in a big group they can take down the player.
          * You can implement many damage scenario's with enemy's or objects.
          */
-        private float maxHealth;
-        private float currentHealth;
+        private float maxHealth, currentHealth;
 
         public Player()
         {
