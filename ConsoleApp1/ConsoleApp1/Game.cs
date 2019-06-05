@@ -38,26 +38,26 @@ namespace ZuulCS
             caveEntrance.setExit("north", lavaCave);
             caveEntrance.setExit("up", crackedCave);
 
-            caveEntrance.placeItemInRoom(new Item("Dynamite"));
+            caveEntrance.getInventory().placeItemInInventoryD(new Item("Dynamite"));
             //Water cave
             waterCave.setExit("west", caveEntrance);
             //Stalactite cave
             stalactiteCave.setExit("east", caveEntrance);
             stalactiteCave.setExit("down", darkCave);
 
-            stalactiteCave.placeItemInRoom(new Item("Pickaxe"));
+            stalactiteCave.getInventory().placeItemInInventoryD(new Item("Pickaxe"));
             //Lava Cave
             lavaCave.setExit("south", caveEntrance);
 
-            lavaCave.placeItemInRoom(new Item("Lava Rock"));
+            lavaCave.getInventory().placeItemInInventoryD(new Item("Lava Rock"));
             //Up cracked cave
             crackedCave.setExit("down", caveEntrance);
 
-            crackedCave.placeItemInRoom(new Item("Old Sword"));
+            crackedCave.getInventory().placeItemInInventoryD(new Item("Old Sword"));
             //Down dark cave
             darkCave.setExit("up", stalactiteCave);
 
-            darkCave.placeItemInRoom(new Item("Old Pistol"));
+            darkCave.getInventory().placeItemInInventoryD(new Item("Old Pistol"));
             // start game outside
             player.setCurrentRoom(outside);
 		}
@@ -190,7 +190,7 @@ namespace ZuulCS
             // Try to leave current room.
             Console.WriteLine(player.getCurrentRoom().getLongDescription());
             //Looks around the room for items and print it.
-            Console.WriteLine(player.getCurrentRoom().getItemInRoom());
+            Console.WriteLine(player.getCurrentRoom().getInventory().getItemsstring());
         }
 
         /**
@@ -198,13 +198,14 @@ namespace ZuulCS
          */
         private void pickup(Command command)
         {
-            for (int i = 0; i < player.getCurrentRoom().getItemList().Count; ++i)
+            if (player.getCurrentRoom() != null && player.getCurrentRoom().getInventory() != null && player.getCurrentRoom().getInventory().getItemList() != null && command.getSecondWord() != null && player.getCurrentRoom().getInventory().getItemList().ContainsKey(command.getSecondWord()))
             {
-                string itemInRoom = player.getCurrentRoom().getItemList()[i].getItemName();
+                Item itemInRoom = player.getCurrentRoom().getInventory().getItemList()[command.getSecondWord()];
+                string itenName = itemInRoom.getItemName();
                 if (command.getSecondWord().Equals(itemInRoom))
                 {
                     Console.WriteLine("picked up " + itemInRoom);
-                    player.getCurrentRoom().removeItemFromRoom(player.getCurrentRoom().getItemList()[i]);
+                    player.getCurrentRoom().getInventory().removeItemFromInventory(player.getCurrentRoom().getInventory().getItemList()[command.getSecondWord()]);
                 }
             }
         }
