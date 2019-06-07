@@ -5,6 +5,8 @@ namespace ZuulCS
     public class Player
     {
         private Room currentRoom;
+        private Inventory inventory;
+
         /*
          * The player health is a float so the player can take damage of half a heart, higher or lower.
          * This way you can add as an example small enemy's that do little damage but when the enemy is in a big group they can take down the player.
@@ -16,6 +18,12 @@ namespace ZuulCS
         {
             this.maxHealth = 20;
             this.currentHealth = this.maxHealth;
+            this.inventory = new Inventory(2,2F);
+        }
+
+        public Inventory getInventory()
+        {
+            return inventory;
         }
 
         public float getMaxHealth()

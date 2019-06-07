@@ -15,7 +15,9 @@ namespace ZuulCS
 			validCommands = new string[] {
 				"go",
                 "look",
-                "pickup",
+                "take",
+                "drop",
+                 "checkInventory",
                 "quit",
 				"help"
 			};

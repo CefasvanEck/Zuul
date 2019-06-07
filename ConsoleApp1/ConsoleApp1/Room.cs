@@ -17,7 +17,7 @@ namespace ZuulCS
 		{
 			this.description = description;
             this.exits = new Dictionary<string, Room>();
-            this.inventory = new Inventory();
+            this.inventory = new Inventory(100,100F);
         }
 
         /**

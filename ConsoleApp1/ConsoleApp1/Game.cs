@@ -38,26 +38,26 @@ namespace ZuulCS
             caveEntrance.setExit("north", lavaCave);
             caveEntrance.setExit("up", crackedCave);
 
-            caveEntrance.getInventory().placeItemInInventoryD(new Item("Dynamite"));
+            caveEntrance.getInventory().placeItemInInventory(new Item("Dynamite" , 1.5F));
             //Water cave
             waterCave.setExit("west", caveEntrance);
             //Stalactite cave
             stalactiteCave.setExit("east", caveEntrance);
             stalactiteCave.setExit("down", darkCave);
 
-            stalactiteCave.getInventory().placeItemInInventoryD(new Item("Pickaxe"));
+            stalactiteCave.getInventory().placeItemInInventory(new Item("Pickaxe", 2.5F));
             //Lava Cave
             lavaCave.setExit("south", caveEntrance);
 
-            lavaCave.getInventory().placeItemInInventoryD(new Item("Lava Rock"));
+            lavaCave.getInventory().placeItemInInventory(new Item("LavaRock", 1F));
             //Up cracked cave
             crackedCave.setExit("down", caveEntrance);
 
-            crackedCave.getInventory().placeItemInInventoryD(new Item("Old Sword"));
+            crackedCave.getInventory().placeItemInInventory(new Item("OldSword", 1.8F));
             //Down dark cave
             darkCave.setExit("up", stalactiteCave);
 
-            darkCave.getInventory().placeItemInInventoryD(new Item("Old Pistol"));
+            darkCave.getInventory().placeItemInInventory(new Item("OldPistol", 1F));
             // start game outside
             player.setCurrentRoom(outside);
 		}
@@ -86,8 +86,8 @@ namespace ZuulCS
 		private void printWelcome()
 		{
 			Console.WriteLine();
-			Console.WriteLine("Welcome to Cavecraft!");
-			Console.WriteLine("Cavecraft is an underground dungeon adventure game.");
+			Console.WriteLine("Welcome to The Forest!");
+			Console.WriteLine("The Forest is an island Survival Game with cannibals and Mutants running around.");
 			Console.WriteLine("Type 'help' if you need help.");
 			Console.WriteLine();
 			Console.WriteLine(player.getCurrentRoom().getLongDescription());
@@ -102,13 +102,15 @@ namespace ZuulCS
 		{
 			bool wantToQuit = false;
 
-			if(command.isUnknown()) {
+			if(command.isUnknown())
+            {
 				Console.WriteLine("I don't know what you mean...");
 				return false;
 			}
 
 			string commandWord = command.getCommandWord();
-			switch (commandWord) {
+			switch (commandWord)
+            {
 				case "help":
 					printHelp();
 					break;
@@ -118,10 +120,16 @@ namespace ZuulCS
                 case "look":
                     goLook();
                     break;
-                case "pickup":
-                    pickup(command);
+                case "checkInventory":
+                    checkInventory();
                     break;
-				case "quit":
+                case "take":
+                    take(command);
+                    break;
+                case "drop":
+                    drop(command);
+                    break;
+                case "quit":
 					wantToQuit = true;
 					break;
 			}
@@ -174,6 +182,10 @@ namespace ZuulCS
                 player.damage(1);
                 Console.WriteLine("The player took some damage....");
                 Console.WriteLine("The player has " + player.getCurrentHealth() + " health left.");
+                if(player.getCurrentHealth() == 0)
+                {
+                    Console.WriteLine("The player died...");
+                }
             }
             else
             {
@@ -193,22 +205,78 @@ namespace ZuulCS
             Console.WriteLine(player.getCurrentRoom().getInventory().getItemsstring());
         }
 
+        private void checkInventory()
+        {
+            Console.WriteLine(player.getInventory().getItemsstring());
+        }
+
         /**
          * Pickup an item and remove it from the room array list
          */
-        private void pickup(Command command)
+        private void take(Command command)
         {
-            if (player.getCurrentRoom() != null && player.getCurrentRoom().getInventory() != null && player.getCurrentRoom().getInventory().getItemList() != null && command.getSecondWord() != null && player.getCurrentRoom().getInventory().getItemList().ContainsKey(command.getSecondWord()))
+            if (player.getCurrentRoom().getInventory().getItemList().ContainsKey(command.getSecondWord()))
             {
                 Item itemInRoom = player.getCurrentRoom().getInventory().getItemList()[command.getSecondWord()];
+
                 string itenName = itemInRoom.getItemName();
-                if (command.getSecondWord().Equals(itemInRoom))
+                if (command.getSecondWord().Equals(itenName) && player.getInventory().getInventorySize() + 1 < +player.getInventory().getInventoryMaxSize() && player.getInventory().getItemWeight() + itemInRoom.getItemWeight() <= player.getInventory().getMaxItemWeight())
                 {
-                    Console.WriteLine("picked up " + itemInRoom);
-                    player.getCurrentRoom().getInventory().removeItemFromInventory(player.getCurrentRoom().getInventory().getItemList()[command.getSecondWord()]);
+                    Console.WriteLine("picked up " + itenName);
+                    //ToDo: make swap function in inventory and return message to function with check if it is the size or bigger
+
+                    //Add and Remove from the inventorys the size
+                    player.getInventory().addToInventory();
+                    player.getCurrentRoom().getInventory().removeFromInventory();
+                    //Add and remove weight
+                    player.getInventory().addItemWeight(itemInRoom.getItemWeight());
+                    player.getCurrentRoom().getInventory().removeItemWeight(itemInRoom.getItemWeight());
+                    //Swap Item
+                    player.getInventory().placeItemInInventory(itemInRoom);
+                    player.getCurrentRoom().getInventory().removeItemFromInventory(itenName);
                 }
+                else if (player.getInventory().getItemWeight() + itemInRoom.getItemWeight() > player.getInventory().getMaxItemWeight())
+                {
+                    Console.WriteLine("Your inventory is to heavy to pickup anything else.");
+                }
+                else if (player.getInventory().getInventorySize() + 1 > player.getInventory().getInventoryMaxSize())
+                {
+                    Console.WriteLine("Your inventory is full.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("The room does not contain " + command.getSecondWord());
             }
         }
 
+        /**
+         * Pickup an item and remove it from the room array list
+         */
+        private void drop(Command command)
+        {
+            if (player.getInventory().getItemList().ContainsKey(command.getSecondWord()))
+            {
+                Item itemInRoom = player.getInventory().getItemList()[command.getSecondWord()];
+                string itenName = itemInRoom.getItemName();
+                if (command.getSecondWord().Equals(itenName))
+                {
+                    Console.WriteLine("dropped " + itenName);
+                    //Add and Remove from the inventorys the size
+                    player.getCurrentRoom().getInventory().addToInventory();
+                    player.getInventory().removeFromInventory();
+                    //Add and remove weight
+                    player.getCurrentRoom().getInventory().addItemWeight(itemInRoom.getItemWeight());
+                    player.getInventory().removeItemWeight(itemInRoom.getItemWeight());
+                    //Swap Item
+                    player.getCurrentRoom().getInventory().placeItemInInventory(itemInRoom);
+                    player.getInventory().removeItemFromInventory(itenName);
+                }
+            }
+            else
+            {
+                Console.WriteLine("The player does not have " + command.getSecondWord() + " in his/her inventory");
+            }
+        }
     }
 }
