@@ -23,5 +23,9 @@ namespace ZuulCS
             return itemName;
         }
 
+        public virtual Player use(Player player)
+        {
+            return player;
+        }
     }
 }

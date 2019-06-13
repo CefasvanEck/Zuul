@@ -49,7 +49,7 @@ namespace ZuulCS
             //Lava Cave
             lavaCave.setExit("south", caveEntrance);
 
-            lavaCave.getInventory().placeItemInInventory(new Item("LavaRock", 1F));
+            lavaCave.getInventory().placeItemInInventory(new BadItem(2F, "LavaRock", 1F));
             //Up cracked cave
             crackedCave.setExit("down", caveEntrance);
 
@@ -62,6 +62,10 @@ namespace ZuulCS
             player.setCurrentRoom(outside);
 		}
 
+        public Player getPlayer()
+        {
+            return player;
+        }
 
 		/**
 	     *  Main play routine.  Loops until end of play.
@@ -73,7 +77,8 @@ namespace ZuulCS
 			// Enter the main command loop.  Here we repeatedly read commands and
 			// execute them until the game is over.
 			bool finished = false;
-			while (! finished) {
+			while (! finished)
+            {
 				Command command = parser.getCommand();
 				finished = processCommand(command);
 			}
@@ -129,6 +134,9 @@ namespace ZuulCS
                 case "drop":
                     drop(command);
                     break;
+                case "use":
+                    use(command);
+                    break;
                 case "quit":
 					wantToQuit = true;
 					break;
@@ -182,10 +190,21 @@ namespace ZuulCS
                 player.damage(1);
                 Console.WriteLine("The player took some damage....");
                 Console.WriteLine("The player has " + player.getCurrentHealth() + " health left.");
-                if(player.getCurrentHealth() == 0)
+
+                foreach (string key in player.getInventory().getItemList().Keys)
+                {
+                    player = player.getInventory().getItemList()[key].use(player);
+                }
+
+                if (player.getCurrentHealth() < 0)
+                {
+                    player.setCurrentHealth(0);
+                }
+
+                if (player.getCurrentHealth() == 0)
                 {
                     Console.WriteLine("The player died...");
-                }
+                }  
             }
             else
             {
@@ -250,9 +269,17 @@ namespace ZuulCS
             }
         }
 
-        /**
-         * Pickup an item and remove it from the room array list
-         */
+        private void use(Command command)
+        {
+            foreach (string key in player.getInventory().getItemList().Keys)
+            {
+                player = player.getInventory().getItemList()[command.getSecondWord()].use(player);
+            }
+        }
+
+       /**
+        * Pickup an item and remove it from the room array list
+        */
         private void drop(Command command)
         {
             if (player.getInventory().getItemList().ContainsKey(command.getSecondWord()))

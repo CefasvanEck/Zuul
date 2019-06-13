@@ -17,6 +17,7 @@ namespace ZuulCS
                 "look",
                 "take",
                 "drop",
+                "use",
                  "checkInventory",
                 "quit",
 				"help"

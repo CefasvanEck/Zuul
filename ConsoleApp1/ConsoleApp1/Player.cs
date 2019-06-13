@@ -18,7 +18,7 @@ namespace ZuulCS
         {
             this.maxHealth = 20;
             this.currentHealth = this.maxHealth;
-            this.inventory = new Inventory(2,2F);
+            this.inventory = new Inventory(5,20F);
         }
 
         public Inventory getInventory()
