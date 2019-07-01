@@ -9,7 +9,6 @@ namespace ZuulCS
         /**
          * The size of the inventory
         */
-        private int inventorySize;
         private int inventoryMaxSize;
 
         /**
@@ -35,23 +34,9 @@ namespace ZuulCS
 
         public int getInventorySize()
         {
-            return inventorySize;
+            return itemsDic.Count;
         }
-
-        /**
-         * Add and remove inventory size varibale
-         */
-
-        public void addToInventory()
-        {
-             this.inventorySize += 1;
-        }
-
-        public void removeFromInventory()
-        {
-            this.inventorySize -= 1;
-        }
-
+ 
         /**
          * Item weights
          */

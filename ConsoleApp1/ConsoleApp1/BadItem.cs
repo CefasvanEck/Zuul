@@ -11,21 +11,14 @@ namespace ZuulCS
         {
             this.damagePlayer = playerDamage;
         }
-
         
-        public override Player use(Player player)
+        public override void use(Player player)
         {
             if (this.GetType() == typeof(BadItem))
             {
-                Player player2 = player;
-                player2.damage(this.damagePlayer);
+                player.damage(this.damagePlayer);
                 Console.WriteLine("The Player took some damage");
-                Console.WriteLine("The player has " + player2.getCurrentHealth() + " left.");
-                return player2;
-            }
-            else
-            {
-                return player;
+                Console.WriteLine("The player has " + player.getCurrentHealth() + " left.");
             }
         }
 

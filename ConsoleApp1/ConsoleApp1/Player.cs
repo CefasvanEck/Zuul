@@ -6,6 +6,11 @@ namespace ZuulCS
     {
         private Room currentRoom;
         private Inventory inventory;
+        private float armorProtection;
+        private bool hasHelmet = false;
+        private bool hasChestplate = false;
+        private bool hasLeggings = false;
+        private bool hasBoots = false;
 
         /*
          * The player health is a float so the player can take damage of half a heart, higher or lower.
@@ -19,6 +24,16 @@ namespace ZuulCS
             this.maxHealth = 20;
             this.currentHealth = this.maxHealth;
             this.inventory = new Inventory(5,20F);
+        }
+
+        public void setArmorProtection(float protection)
+        {
+            this.armorProtection = protection;
+        }
+
+        public float getArmorProtection()
+        {
+            return this.armorProtection;
         }
 
         public Inventory getInventory()
@@ -94,5 +109,45 @@ namespace ZuulCS
             return currentRoom;
         }
 
+        public void setHelmet(bool s)
+        {
+            this.hasHelmet = s;
+        }
+
+        public void setChestplate(bool s)
+        {
+            this.hasChestplate = s;
+        }
+
+        public void setLeggings(bool s)
+        {
+            this.hasLeggings = s;
+        }
+
+        public void setBoots(bool s)
+        {
+            this.hasBoots = s;
+        }
+
+
+        public bool getHelmet()
+        {
+            return this.hasHelmet;
+        }
+
+        public bool getChestplate()
+        {
+            return this.hasChestplate;
+        }
+
+        public bool getLeggings()
+        {
+            return this.hasLeggings;
+        }
+
+        public bool getBootst()
+        {
+            return this.hasBoots;
+        }
     }
 }

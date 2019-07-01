@@ -23,9 +23,11 @@ namespace ZuulCS
             return itemName;
         }
 
-        public virtual Player use(Player player)
+        public virtual void use(Player player){}
+
+        public virtual float useWeapon(Player player)
         {
-            return player;
+            return 0;
         }
     }
 }
